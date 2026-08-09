@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>术力口周榜</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            font-family: sans-serif;
+            
+            /* --- 新增部分开始 --- */
+            min-height: 100vh;       /* 保证页面至少占满整个屏幕高度 */
+            display: flex;           /* 启用 Flex 布局 */
+            flex-direction: column;  /* 垂直排列子元素 */
+            /* --- 新增部分结束 --- */
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%; /* 确保容器宽度适配 */
+        }
+
+        .player-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 补充原代码中缺失的编号样式 */
+        .number-tag {
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* --- 新增/修改 Footer 样式 --- */
+        footer {
+            /* 利用 margin-top: auto 将 footer 推到底部 */
+            margin-top: auto; 
+            text-align: center;
+            color: #6b7280; /* 对应 text-gray-500 */
+            font-size: 0.875rem; /* 对应 text-sm */
+            padding: 1rem 0; /* 对应 py-4 */
+            border-top: 1px solid rgba(209, 213, 219, 0.5); /* 对应 border-t border-gray-300/50 */
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 自定义文本卡片 -->
+        <div class="player-item">
+            <div class="home-tag"><a href="/index.html">首页</a></div>
+                <div class="text-card" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+                    术力口周榜<br>
+                    加载有点慢请稍等...<br>
+                    更新时间:2026年8月5日
+                </div>
+        </div>
+
+        <!-- 播放器 1 -->
+        <div class="player-item">
+            <div class="number-tag">01</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3406178212&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 2 -->
+        <div class="player-item">
+            <div class="number-tag">02</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3341026792&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 3 -->
+        <div class="player-item">
+            <div class="number-tag">03</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3344430030&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 4 -->
+        <div class="player-item">
+            <div class="number-tag">04</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=2660875049&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 5 -->
+        <div class="player-item">
+            <div class="link-tag"><a href="https://www.bilibili.com/video/BV1oQ316sEmV/" target="_blank">05暂无音源点击查看视频</a></div>
+        </div>
+
+        <!-- 播放器 6 -->
+        <div class="player-item">
+            <div class="number-tag">06</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3412654766&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 7 -->
+        <div class="player-item">
+            <div class="number-tag">07</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3378813781&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 8 -->
+        <div class="player-item">
+            <div class="number-tag">08</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3382709068&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 9 -->
+        <div class="player-item">
+            <div class="number-tag">09</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=2725493366&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 10 -->
+        <div class="player-item">
+            <div class="number-tag">10</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=1972350196&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 11 -->
+        <div class="player-item">
+            <div class="number-tag">11</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3409585258&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 12 -->
+        <div class="player-item">
+            <div class="number-tag">12</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3414869621&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 13-->
+        <div class="player-item">
+            <div class="number-tag">13</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=2724081969&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 14 -->
+        <div class="player-item">
+            <div class="link-tag"><a href="https://www.bilibili.com/video/BV1dyoDBCEWU/" target="_blank">14暂无音源点击查看视频</a></div>
+        </div>
+
+        <!-- 播放器 15 -->
+        <div class="player-item">
+            <div class="number-tag">15</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=2674765182&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 16 -->
+        <div class="player-item">
+            <div class="link-tag"><a href="https://www.bilibili.com/video/BV1Vo3C6VEY5/" target="_blank">16暂无音源点击查看视频</a></div>
+        </div>
+
+        <!-- 播放器 17 -->
+        <div class="player-item">
+            <div class="number-tag">17</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3324075395&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 18 -->
+        <div class="player-item">
+            <div class="link-tag"><a href="https://www.bilibili.com/video/BV1SHgv63Etn/" target="_blank">18暂无音源点击查看视频</a></div>
+        </div>
+
+        <!-- 播放器 19 -->
+        <div class="player-item">
+            <div class="number-tag">19</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3407372478&auto=0&height=66"></iframe>
+        </div>
+
+        <!-- 播放器 20 -->
+        <div class="player-item">
+            <div class="number-tag">20</div>
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="https://music.163.com/outchain/player?type=2&id=3412053434&auto=0&height=66"></iframe>
+        </div>
+    </div>
+
+    <!-- 底部声明 -->
+    <footer>
+        <p>排名来源:Bili-Board_Atel 术力口周榜<br>音频来源:网易云外链</p>
+    </footer>
+
+</body>
+</html>
