@@ -10,11 +10,18 @@
     <!-- 引入 Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 自定义渐变背景 */
+/* 完全对齐示例网页的背景图片规则，实现背景自适应缩放效果 */
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('/ycy.webp') center/cover no-repeat fixed;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
         }
         .glass-effect {
             background: rgba(255, 255, 255, 0.7);
