@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于 - 带着企鹅去南极</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="/file/web/favicon.ico" type="image/icon">
+    <link rel="shortcut icon" href="/file/web/favicon.ico" type="image/icon">
+    <style>
+        /* ========== iframe 嵌入模式（默认）：透明无背景 ========== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+        }
+        /* ========== 独立标签页模式：与主页完全一致 ========== */
+        body.standalone-mode {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: url('https://t.alcy.cc/ycy') center/cover no-repeat fixed;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        body.standalone-mode .standalone-shell {
+            width: 100%;
+            max-width: 896px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            padding-bottom: 0.5rem;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 9999px;
+            color: #1f2937;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+            color: #2563eb;
+        }
+        .prose-custom {
+            color: #1f2937;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        .prose-custom p { margin-bottom: 1rem; }
+        .prose-custom a { color: #2563eb; text-decoration: underline; }
+        .prose-custom img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .prose-custom img:hover {
+            transform: scale(1.03);
+        }
+        .image-grid {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        /* standalone 模式下的"返回主页"按钮 */
+        .standalone-home-link {
+            display: none;
+        }
+        body.standalone-mode .standalone-home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1.2rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 9999px;
+            color: #1f2937;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+        body.standalone-mode .standalone-home-link:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+            color: #2563eb;
+        }
+
+        /* ========== 文字白边高光：两种模式下都生效（嵌套 iframe 与独立打开均可见） ========== */
+        .section-title {
+            color: #111827 !important;
+            -webkit-text-stroke: 0.3px rgba(255,255,255,0.6);
+            text-shadow:
+                0 0 3px #ffffff,
+                0 0 6px rgba(255,255,255,0.9),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                2px 2px 3px rgba(255,255,255,0.7),
+                -2px 2px 3px rgba(255,255,255,0.7),
+                2px -2px 3px rgba(255,255,255,0.7),
+                -2px -2px 3px rgba(255,255,255,0.7);
+        }
+        .prose-custom,
+        .prose-custom p,
+        .prose-custom strong,
+        .prose-custom br {
+            color: #1f2937 !important;
+            -webkit-text-stroke: 0.2px rgba(255,255,255,0.5);
+            text-shadow:
+                0 0 2px #ffffff,
+                0 0 4px rgba(255,255,255,0.8),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                1px 1px 3px rgba(255,255,255,0.5);
+        }
+        /* 按钮、链接 不加重高光（两种模式都不） */
+        .back-btn,
+        .back-btn *,
+        .standalone-home-link,
+        .standalone-home-link *,
+        .prose-custom a,
+        .prose-custom a * {
+            -webkit-text-stroke: 0 !important;
+            text-shadow: none !important;
+        }
+        /* 独立标签页模式下额外加强（因为是双层毛玻璃） */
+        body.standalone-mode .section-title {
+            text-shadow:
+                0 0 4px #ffffff,
+                0 0 8px rgba(255,255,255,1),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                2px 2px 4px rgba(255,255,255,0.85),
+                -2px 2px 4px rgba(255,255,255,0.85),
+                2px -2px 4px rgba(255,255,255,0.85),
+                -2px -2px 4px rgba(255,255,255,0.85);
+        }
+        body.standalone-mode .prose-custom,
+        body.standalone-mode .prose-custom p,
+        body.standalone-mode .prose-custom strong,
+        body.standalone-mode .prose-custom br {
+            text-shadow:
+                0 0 3px #ffffff,
+                0 0 6px rgba(255,255,255,0.9),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                1px 1px 4px rgba(255,255,255,0.6);
+        }
+    </style>
+</head>
+<body>
+    <div id="page-root">
+        <a href="index.html" class="standalone-home-link">
+            <i class="fas fa-arrow-left"></i> 返回主页
+        </a>
+        <h2 class="section-title">关于我</h2>
+        <div class="prose-custom">
+            <p>
+                <strong>个人资料</strong><br>
+                　　·中文名 带着企鹅去南极<br>
+                　　·性别 男<br>
+                　　·故乡 中国-湖南<br>
+                　　·星座 水瓶座<br>
+                　　·邮箱 shenyutinglllwuyu@163.com<br>
+                　　·哔哩哔哩<a href="https://space.bilibili.com/393315783" target="_blank" rel="noopener noreferrer">@偷瓜小母牛</a>
+            </p>
+            <p>
+                <strong>为什么要叫带着企鹅去南极？</strong><br>
+                　　因为不知道给自己的QQ昵称起什么，而当时在QQ软件的宣传页面看到了"带着企鹅去南极"这么一个名字，于是就一直用下来了。
+            </p>
+        </div>
+
+        <h2 class="section-title" style="margin-top:2rem;">关于本站</h2>
+        <div class="prose-custom">
+            <p>
+                　　# 带着企鹅去南极の个人主页<br><br>
+                　　Copyright © 2026 shenyutinglllwuyu. All Rights Reserved.
+            </p>
+        </div>
+
+        <div class="image-grid">
+            <img src="https://t.alcy.cc/ycy" alt="装饰性背景图片">
+        </div>
+    </div>
+
+    <script>
+        const isInIframe = window.top !== window.self;
+        if (!isInIframe) {
+            document.body.classList.add('standalone-mode');
+            const root = document.getElementById('page-root');
+            const shell = document.createElement('div');
+            shell.className = 'standalone-shell';
+            root.parentNode.insertBefore(shell, root);
+            shell.appendChild(root);
+            document.title = '关于 - 带着企鹅去南极';
+        }
+
+        let lastNotifiedHeight = 0;
+        let resizeTimer = null;
+        const notifyParentResize = () => {
+            if (!isInIframe) return;
+            const height = Math.max(
+                document.body.scrollHeight,
+                document.body.offsetHeight,
+                document.documentElement.offsetHeight
+            );
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const now = Math.max(
+                    document.body.scrollHeight,
+                    document.body.offsetHeight,
+                    document.documentElement.offsetHeight
+                );
+                if (Math.abs(now - lastNotifiedHeight) > 2) {
+                    lastNotifiedHeight = now;
+                    try { parent.postMessage({ type: 'iframe-resize', height: now }, '*'); } catch(e){}
+                }
+            }, 50);
+        };
+
+        window.addEventListener('message', (e) => {
+            const data = e.data || {};
+            if (data.type === 'request-resize') {
+                lastNotifiedHeight = 0;
+                notifyParentResize();
+            }
+        });
+
+        document.getElementById('about-page-back-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (isInIframe) {
+                try { parent.postMessage({ type: 'back-to-dynamic' }, '*'); } catch(err){}
+            } else {
+                location.href = 'index.html';
+            }
+        });
+
+        document.querySelectorAll('img').forEach(img => {
+            if (!img.complete) {
+                img.addEventListener('load', notifyParentResize);
+                img.addEventListener('error', notifyParentResize);
+            }
+        });
+
+        window.addEventListener('load', () => {
+            notifyParentResize();
+            setTimeout(notifyParentResize, 300);
+            setTimeout(notifyParentResize, 800);
+        });
+        window.addEventListener('resize', notifyParentResize);
+    </script>
+</body>
+</html>

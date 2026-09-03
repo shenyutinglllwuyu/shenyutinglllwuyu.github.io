@@ -1,0 +1,27 @@
+
+[
+    {
+        "title": "跑操音乐3.0",
+        "artist": "小沈同学",
+        "cover": "../image/cover/CH0242_spr_17.png",
+        "src": "../music/01.mp3"
+    },
+    {
+        "title": "海兰德学院跑操曲",
+        "artist": "芝士Cabob",
+        "cover": "../image/cover/x76w7ph8.png",
+        "src": "../music/02.mp3"
+    },
+    {
+        "title": "跑操音乐2.0",
+        "artist": "小沈同学",
+        "cover": "../image/cover/CH0242_spr_17.png",
+        "src": "../music/03.mp3"
+    },
+    {
+        "title": "跑操音乐1.0",
+        "artist": "小沈同学",
+        "cover": "../image/cover/CH0242_spr_17.png",
+        "src": "../music/04.mp3"
+    }
+]

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>带着企鹅去南极の个人主页</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="file/web/favicon.ico" type="image/icon">
+    <link rel="shortcut icon" href="file/web/favicon.ico" type="image/icon">
+    <link rel="apple-touch-icon" href="file/web/favicon.ico">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: url('https://t.alcy.cc/ycy') center/cover no-repeat fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        .glass-effect {
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+            color: #2563eb;
+        }
+        /* 文字白边效果（仅应用于大标题/正文，不应用于导航） */
+        .text-shadow-soft {
+            text-shadow:
+                0 0 1px rgba(255, 255, 255, 0.95),
+                1px 1px 1px rgba(255, 255, 255, 0.8),
+                -1px 1px 1px rgba(255, 255, 255, 0.8),
+                1px -1px 1px rgba(255, 255, 255, 0.8),
+                -1px -1px 1px rgba(255, 255, 255, 0.8);
+        }
+        h1.text-shadow-strong {
+            text-shadow:
+                0 0 2px rgba(255, 255, 255, 1),
+                1.5px 1.5px 1.5px rgba(255, 255, 255, 0.9),
+                -1.5px 1.5px 1.5px rgba(255, 255, 255, 0.9),
+                1.5px -1.5px 1.5px rgba(255, 255, 255, 0.9),
+                -1.5px -1.5px 1.5px rgba(255, 255, 255, 0.9);
+        }
+        .nav-link, .nav-link * {
+            text-shadow: none !important;
+            -webkit-text-stroke: 0 !important;
+        }
+        /* iframe 自适应：高度通过 postMessage 动态调整 */
+        .content-iframe {
+            width: 100%;
+            border: none;
+            overflow: hidden;
+            display: block;
+            /* 默认最小高度，加载后自适应 */
+            min-height: 300px;
+        }
+        .iframe-wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10 px-4">
+
+    <!-- 顶部区域 -->
+    <header class="w-full max-w-4xl mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="glass-effect rounded-2xl p-6 shadow-lg flex items-center space-x-6">
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <a href="https://space.bilibili.com/393312783" target="_blank" rel="noopener noreferrer">
+                    <img src="file/web/635f3bbd2ad155f322bfa7a9a0591703.jpg" alt="用户头像" class="relative w-24 h-24 rounded-full object-cover border-4 border-white shadow-md">
+                </a>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h1 class="text-shadow-strong text-3xl font-bold text-gray-800 mb-2 truncate">带着企鹅去南极</h1>
+                <p class="text-shadow-soft text-gray-700 text-lg leading-relaxed">
+                    欢迎来到带着企鹅去南极的空间
+                </p>
+            </div>
+        </div>
+        <div class="glass-effect rounded-2xl p-6 shadow-lg flex items-center justify-center">
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2685882285&auto=1&height=66"></iframe>
+        </div>
+    </header>
+
+    <!-- 导航链接区域 -->
+    <nav class="w-full max-w-4xl mb-12">
+        <ul class="flex flex-wrap justify-center gap-4">
+            <li>
+                <a href="#" id="back-to-dynamic-btn" class="nav-link px-6 py-2 bg-white/15 border border-blue-200/40 rounded-full shadow-md shadow-black/15 text-gray-800 font-medium hover:shadow-lg hover:text-blue-600 flex items-center gap-2">
+                    <i class="fas fa-home"></i> 首页
+                </a>
+            </li>
+            <li>
+                <a href="file/html/MusicPlayer.html" class="nav-link px-6 py-2 bg-white/15 border border-blue-200/40 rounded-full shadow-md shadow-black/15 text-gray-800 font-medium hover:shadow-lg hover:text-blue-600 flex items-center gap-2">
+                    <i class="fas fa-music"></i> 音乐播放器
+                </a>
+            </li>
+            <li>
+                <a href="file/html/music163shuzhiM1.html" class="nav-link px-6 py-2 bg-white/15 border border-blue-200/40 rounded-full shadow-md shadow-black/15 text-gray-800 font-medium hover:shadow-lg hover:text-blue-600 flex items-center gap-2">
+                    <i class="fas fa-star"></i> 推荐音乐
+                </a>
+            </li>
+            <li>
+                <a href="file/html/archives.html" class="nav-link px-6 py-2 bg-white/15 border border-blue-200/40 rounded-full shadow-md shadow-black/15 text-gray-800 font-medium hover:shadow-lg hover:text-blue-600 flex items-center gap-2">
+                    <i class="fas fa-history"></i> 历史版本
+                </a>
+            </li>
+            <li>
+                <a href="#" id="toggle-about-btn" class="nav-link px-6 py-2 bg-white/15 border border-blue-200/40 rounded-full shadow-md shadow-black/15 text-gray-800 font-medium hover:shadow-lg hover:text-blue-600 flex items-center gap-2">
+                    <i class="fas fa-file-alt"></i> 关于
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 中间主要内容区域：使用 iframe 嵌套子页面 -->
+    <main class="w-full max-w-4xl glass-effect rounded-2xl p-8 shadow-lg flex-grow">
+        <div class="iframe-wrapper">
+            <!-- 默认加载动态列表；通过切换 src 在 dynamics 与 about 之间切换 -->
+            <iframe id="content-iframe" class="content-iframe" src="file/html/dynamics.html" scrolling="no"></iframe>
+        </div>
+    </main>
+
+    <!-- 底部版权声明 -->
+    <footer class="w-full max-w-4xl mt-12 text-center text-gray-700 text-sm py-4 border-t border-gray-300/50 text-shadow-soft">
+        <p>Copyright &copy; 2026 shenyutinglllwuyu. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const iframe = document.getElementById('content-iframe');
+        const toggleAboutBtn = document.getElementById('toggle-about-btn');
+        const backToDynamicBtn = document.getElementById('back-to-dynamic-btn');
+
+        const setActiveNav = (page) => {
+            if (page === 'about') {
+                toggleAboutBtn.style.color = '#2563eb';
+            } else {
+                toggleAboutBtn.style.color = '';
+            }
+        };
+
+        const showDynamic = () => {
+            if (iframe.src !== location.href.replace(/[^/]*$/, '') + 'fiel/html/dynamics.html') {
+                iframe.src = 'file/html/dynamics.html';
+            }
+            setActiveNav('dynamic');
+        };
+
+        const showAbout = () => {
+            if (iframe.src !== location.href.replace(/[^/]*$/, '') + 'file/html/about.html') {
+                iframe.src = 'file/html/about.html';
+            }
+            setActiveNav('about');
+        };
+
+        toggleAboutBtn.addEventListener('click', (e) => { e.preventDefault(); showAbout(); });
+        backToDynamicBtn.addEventListener('click', (e) => { e.preventDefault(); showDynamic(); });
+
+        // 接收子页面消息：自适应高度 + 返回动态页
+        let lastSetHeight = 0;
+        window.addEventListener('message', (e) => {
+            const data = e.data || {};
+            if (data.type === 'iframe-resize' && typeof data.height === 'number') {
+                // 不额外加 padding，避免反馈死循环；高度差小于 4px 忽略
+                const target = Math.ceil(data.height);
+                if (Math.abs(target - lastSetHeight) < 4) return;
+                lastSetHeight = target;
+                iframe.style.height = target + 'px';
+            } else if (data.type === 'back-to-dynamic') {
+                showDynamic();
+            }
+        });
+
+        // iframe 加载完成后主动请求一次高度
+        iframe.addEventListener('load', () => {
+            try {
+                iframe.contentWindow.postMessage({ type: 'request-resize' }, '*');
+            } catch(err){}
+        });
+    </script>
+</body>
+</html>

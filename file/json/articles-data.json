@@ -1,0 +1,42 @@
+[
+    {
+        "tagText": "重大变更",
+        "tagColor": "b42020",
+        "title": "本站第三个版本上线",
+        "updateTime": "2026-09-02",
+        "mdPath": "/file/markdown/5.md",
+        "jumpLink": "/article-detail.html?id=5"
+    },
+    {
+        "tagText": "重大变更",
+        "tagColor": "b42020",
+        "title": "本站第二个版本上线",
+        "updateTime": "2026-08-10",
+        "mdPath": "/file/markdown/4.md",
+        "jumpLink": "/article-detail.html?id=4"
+    },
+    {
+        "tagText": "重大变更",
+        "tagColor": "b42020",
+        "title": "本站第一个版本上线",
+        "updateTime": "2026-08-08",
+        "mdPath": "/file/markdown/3.md",
+        "jumpLink": "/article-detail.html?id=3"
+    },
+    {
+        "tagText": "重大变更",
+        "tagColor": "b42020",
+        "title": "本站最原始版本",
+        "updateTime": "2026-08-07",
+        "mdPath": "/file/markdown/2.md",
+        "jumpLink": "/article-detail.html?id=2"
+    },
+    {
+        "tagText": "重大变更",
+        "tagColor": "b42020",
+        "title": "带着企鹅去南极的小站上线",
+        "updateTime": "2026-08-07",
+        "mdPath": "/file/markdown/1.md",
+        "jumpLink": "/article-detail.html?id=1"
+    }
+]

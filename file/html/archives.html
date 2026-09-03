@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史版本</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="web/favicon.ico" type="image/icon">
+    <link rel="shortcut icon" href="web/favicon.ico" type="image/icon">
+    <style>
+        /* ========== iframe 嵌入模式（默认）：透明无背景 ========== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+        }
+        /* ========== 独立标签页（standalone）模式：与主页完全一致 ========== */
+        body.standalone-mode {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #6b7280;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        body.standalone-mode .standalone-shell {
+            width: 100%;
+            max-width: 896px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        /* ========== 顶部标题行布局 ========== */
+        .top-title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+            margin-left: auto;  /* 添加这行，让标题靠右 */
+        }
+
+        .standalone-home-link {
+            display: none;
+        }
+        body.standalone-mode .standalone-home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1.2rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 9999px;
+            color: #1f2937;
+            font-weight: 500;
+            cursor: pointer;
+            transition: none;
+            text-decoration: none;
+        }
+        body.standalone-mode .standalone-home-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: none;
+            color: #1f2937;
+        }
+
+        /* ========== 历史版本卡片样式 ========== */
+        .version-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: none;
+        }
+        .version-card:hover {
+            transform: none;
+            background: rgba(255,255,255,0.15);
+            box-shadow: none;
+        }
+
+        .jump-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 9999px;
+            color: #3b82f6;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: none;
+        }
+        .jump-btn:hover {
+            background: rgba(59,130,246,0.15);
+            transform: none;
+            color: #3b82f6;
+        }
+
+        /* ========== 文字白边高光：两种模式下都生效（嵌套 iframe 与独立打开均可见） ========== */
+        /* 因为背景是半透明白卡片+模糊背景，无论独立还是嵌在主页里，深色字都需要白边描边才能在图上清晰可见 */
+        .ts-strong,
+        .section-title,
+        .version-card h3 {
+            color: #111827 !important;
+            -webkit-text-stroke: 0.3px rgba(255,255,255,0.6);
+            text-shadow:
+                0 0 3px #ffffff,
+                0 0 6px rgba(255,255,255,0.9),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                2px 2px 3px rgba(255,255,255,0.7),
+                -2px 2px 3px rgba(255,255,255,0.7),
+                2px -2px 3px rgba(255,255,255,0.7),
+                -2px -2px 3px rgba(255,255,255,0.7);
+        }
+        .ts-soft,
+        .version-card .update-date,
+        .version-card .version-desc {
+            color: #1f2937 !important;
+            -webkit-text-stroke: 0.2px rgba(255,255,255,0.5);
+            text-shadow:
+                0 0 2px #ffffff,
+                0 0 4px rgba(255,255,255,0.8),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                1px 1px 3px rgba(255,255,255,0.5);
+        }
+        /* 按钮文字不做高光污染 */
+        .standalone-home-link,
+        .standalone-home-link *,
+        .jump-btn,
+        .jump-btn * {
+            -webkit-text-stroke: 0 !important;
+            text-shadow: none !important;
+        }
+        /* 独立标签页模式下额外加强高光效果 */
+        body.standalone-mode .ts-strong,
+        body.standalone-mode .section-title,
+        body.standalone-mode .version-card h3 {
+            text-shadow:
+                0 0 4px #ffffff,
+                0 0 8px rgba(255,255,255,1),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                2px 2px 4px rgba(255,255,255,0.85),
+                -2px 2px 4px rgba(255,255,255,0.85),
+                2px -2px 4px rgba(255,255,255,0.85),
+                -2px -2px 4px rgba(255,255,255,0.85);
+        }
+        body.standalone-mode .ts-soft,
+        body.standalone-mode .version-card .update-date,
+        body.standalone-mode .version-card .version-desc {
+            text-shadow:
+                0 0 3px #ffffff,
+                0 0 6px rgba(255,255,255,0.9),
+                1px 1px 0 #ffffff,
+                -1px 1px 0 #ffffff,
+                1px -1px 0 #ffffff,
+                -1px -1px 0 #ffffff,
+                1px 1px 4px rgba(255,255,255,0.6);
+        }
+    </style>
+</head>
+<body>
+    <div id="page-root">
+        <div class="top-title-bar">
+            <a href="/index.html" class="standalone-home-link">
+                <i class="fas fa-arrow-left"></i> 返回主页
+            </a>
+            <h2 class="section-title ml-auto">网站历史版本</h2>
+            <div></div>
+        </div>
+
+        <div id="version-list" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- 历史版本卡片，可根据实际版本情况自由增减 -->
+            <div class="version-card">
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-xl font-bold m-0 ts-strong">带着企鹅去南极的の小站V2.1</h3>
+                    <p class="version-desc m-0 ts-soft">带着企鹅去南极的个人主页 - 第二版</p>
+                    <p class="update-date m-0 text-sm text-right font-mono ts-soft">
+                        <i class="far fa-calendar-alt"></i> 2026-08-10
+                    </p>
+                    <a href="../archives/web2.1/index.html" class="jump-btn self-end">
+                        <i class="fas fa-external-link-alt"></i> 点击查看
+                    </a>
+                </div>
+            </div>
+
+            <div class="version-card">
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-xl font-bold m-0 ts-strong">带着企鹅去南极的の小站V2.0</h3>
+                    <p class="version-desc m-0 ts-soft">带着企鹅去南极的个人主页 - 第一版</p>
+                    <p class="update-date m-0 text-sm text-right font-mono ts-soft">
+                        <i class="far fa-calendar-alt"></i> 2026-08-08
+                    </p>
+                    <a href="../archives/web2.0/index.html" class="jump-btn self-end">
+                        <i class="fas fa-external-link-alt"></i> 点击查看
+                    </a>
+                </div>
+            </div>
+
+            <div class="version-card">
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-xl font-bold m-0 ts-strong">带着企鹅去南极的の小站V1.0</h3>
+                    <p class="version-desc m-0 ts-soft">音乐播放器 - 初始版本</p>
+                    <p class="update-date m-0 text-sm text-right font-mono ts-soft">
+                        <i class="far fa-calendar-alt"></i> 2026-08-07
+                    </p>
+                    <a href="../archives/web1.0/index.html" class="jump-btn self-end">
+                        <i class="fas fa-external-link-alt"></i> 点击查看
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检测是否在iframe中，独立打开时启用standalone模式，和主页逻辑完全一致
+        const isInIframe = window.top !== window.self;
+        if (!isInIframe) {
+            document.body.classList.add('standalone-mode');
+            const root = document.getElementById('page-root');
+            const shell = document.createElement('div');
+            shell.className = 'standalone-shell';
+            root.parentNode.insertBefore(shell, root);
+            shell.appendChild(root);
+        }
+
+        // iframe内嵌模式下自动通知父窗口调整页面高度，保持布局适配完整
+        let lastNotifiedHeight = 0;
+        let resizeTimer = null;
+        const notifyParentResize = () => {
+            if (!isInIframe) return;
+            const height = Math.max(
+                document.body.scrollHeight,
+                document.body.offsetHeight,
+                document.documentElement.offsetHeight
+            );
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const now = Math.max(
+                    document.body.scrollHeight,
+                    document.body.offsetHeight,
+                    document.documentElement.offsetHeight
+                );
+                if (Math.abs(now - lastNotifiedHeight) > 2) {
+                    lastNotifiedHeight = now;
+                    try {
+                        parent.postMessage({ type: 'iframe-resize', height: now }, '*');
+                    } catch(e){}
+                }
+            }, 50);
+        };
+
+        window.addEventListener('message', (e) => {
+            const data = e.data || {};
+            if (data.type === 'request-resize') {
+                lastNotifiedHeight = 0;
+                notifyParentResize();
+            }
+        });
+
+        window.addEventListener('load', notifyParentResize);
+        window.addEventListener('resize', notifyParentResize);
+        window.addEventListener('load', () => {
+            setTimeout(notifyParentResize, 300);
+        });
+    </script>
+</body>
+</html>
