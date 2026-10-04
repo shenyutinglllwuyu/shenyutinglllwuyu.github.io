@@ -1,4 +1,12 @@
-[
+[ 
+    {
+        "tagText": "生活动态",
+        "tagColor": "00d265",
+        "title": "超~级~大~芒~果！",
+        "updateTime": "2026-10-04",
+        "mdPath": "/file/markdown/6.md",
+        "jumpLink": "/article-detail.html?id=6"
+    },
     {
         "tagText": "重大变更",
         "tagColor": "b42020",
