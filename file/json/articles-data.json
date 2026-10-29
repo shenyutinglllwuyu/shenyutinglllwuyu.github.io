@@ -1,5 +1,13 @@
 [
     {
+        "tagText": "问题修复",
+        "tagColor": "cddc29",
+        "title": "修复了部分页面没有小图标的问题",
+        "updateTime": "2026-10-29",
+        "mdPath": "/file/markdown/7.md",
+        "jumpLink": "/article-detail.html?id=7"
+    },
+    {
         "tagText": "生活动态",
         "tagColor": "00d265",
         "title": "超~级~大~芒~果！",
