@@ -1,8 +1,0 @@
-.git
-.gitignore
-.assetsignore
-.wrangler
-node_modules
-package.json
-package-lock.json
-*.log
