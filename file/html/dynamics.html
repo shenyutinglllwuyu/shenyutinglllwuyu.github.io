@@ -170,6 +170,37 @@
         .md-rendered hr { border: none; border-top: 1px solid #e5e7eb; margin: 1.5em 0; }
         .md-rendered strong { font-weight: 700; color: #111827; }
 
+        /* ===== 补全：让标准 Markdown 的所有元素都能正确呈现 ===== */
+        .md-rendered h5 { font-size: 1.1em; font-weight: 700; margin-top: 1.2em; margin-bottom: 0.6em; color: #111827; }
+        .md-rendered h6 { font-size: 1em; font-weight: 700; margin-top: 1.2em; margin-bottom: 0.6em; color: #374151; }
+        .md-rendered em { font-style: italic; }
+        .md-rendered del, .md-rendered s { text-decoration: line-through; color: #6b7280; }
+        .md-rendered mark { background: #fef08a; color: inherit; padding: 0 3px; border-radius: 3px; }
+        .md-rendered sup { font-size: 0.75em; vertical-align: super; line-height: 0; }
+        .md-rendered sub { font-size: 0.75em; vertical-align: sub; line-height: 0; }
+        .md-rendered kbd {
+            background: #1f2937; color: #f9fafb; border-radius: 4px;
+            padding: 2px 6px; font-size: 0.85em; font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .md-rendered abbr { text-decoration: underline dotted; cursor: help; }
+        /* 表格对齐：让 Markdown 的 :--- / :---: / ---: 生效（覆盖默认的强制左对齐） */
+        .md-rendered th[align="left"], .md-rendered td[align="left"] { text-align: left; }
+        .md-rendered th[align="center"], .md-rendered td[align="center"] { text-align: center; }
+        .md-rendered th[align="right"], .md-rendered td[align="right"] { text-align: right; }
+        /* 任务列表：隐藏项目符号、对齐复选框 */
+        .md-rendered li:has(> input[type="checkbox"]) { list-style: none; }
+        .md-rendered li > input[type="checkbox"] { margin-right: 0.5em; vertical-align: middle; }
+        /* 嵌套列表与嵌套引用 */
+        .md-rendered li > ul, .md-rendered li > ol { margin: 0.2em 0; }
+        .md-rendered blockquote blockquote { margin: 0.6em 0; }
+        /* 折叠块 details/summary */
+        .md-rendered details { margin: 1em 0; padding: 0.6em 1em; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; }
+        .md-rendered summary { cursor: pointer; font-weight: 600; color: #111827; }
+        .md-rendered details > *:not(summary) { margin-top: 0.6em; }
+        /* 首尾元素不留多余外边距 */
+        .md-rendered > :first-child { margin-top: 0; }
+        .md-rendered > :last-child { margin-bottom: 0; }
+
         .pagination-btn {
             min-width: 40px;
             height: 40px;
@@ -407,7 +438,10 @@
             allArticles: [],
             currentPage: 1,
             pageSize: 10,
-            loadedContentCache: {}
+            loadedContentCache: {},
+            // 动态文件缓存标记：为 0 时走浏览器默认缓存；点击刷新后更新为时间戳，
+            // 使所有动态文件请求的 URL 变化，从而清除（绕过）浏览器缓存并重新获取
+            cacheBust: 0
         };
 
         const cardList = document.getElementById('card-list');
@@ -424,6 +458,9 @@
             state.allArticles = [];
             state.currentPage = 1;
             state.loadedContentCache = {};
+            // 更新缓存标记：让接下来所有动态文件的请求都带上新时间戳，
+            // 从而清除（绕过）浏览器里已缓存的动态文件，全部重新获取
+            state.cacheBust = Date.now();
             cardList.innerHTML = '<div class="empty-tip text-center py-10"><i class="fas fa-spinner fa-spin mr-2"></i> 正在重新加载最新动态...</div>';
             notifyParentResize();
 
@@ -577,7 +614,12 @@
                 return;
             }
             try {
-                const res = await fetch(path);
+                // 未刷新时直接用 path（走浏览器默认缓存）；刷新后带上 cacheBust 时间戳，
+                // 使 URL 变化，强制清除（绕过）缓存并重新获取该动态文件
+                const url = state.cacheBust
+                    ? path + (path.indexOf('?') === -1 ? '?' : '&') + '__t=' + state.cacheBust
+                    : path;
+                const res = await fetch(url);
                 if (res.ok) {
                     const rawText = await res.text();
                     state.loadedContentCache[path] = rawText;
