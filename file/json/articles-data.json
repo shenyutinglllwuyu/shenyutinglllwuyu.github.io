@@ -1,5 +1,13 @@
 [
     {
+        "tagText": "问题修复",
+        "tagColor": "cddc29",
+        "title": "修复了一些问题",
+        "updateTime": "2026-11-08",
+        "mdPath": "/file/markdown/9.md",
+        "jumpLink": "/article-detail.html?id=9"
+    },
+    {
         "tagText": "内容更新",
         "tagColor": "00d265",
         "title": "更新了音乐推荐",
