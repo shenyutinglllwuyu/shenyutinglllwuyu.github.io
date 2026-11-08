@@ -71,15 +71,29 @@
             border-radius: 0.75rem;
             margin-top: 1.5rem;
         }
+      
         /* 分页容器样式 */
         .pagination-container {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            min-height: 40px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            
+            /* 隐藏滚动条，保持界面整洁 */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
         }
+        
+        /* 隐藏 Chrome, Safari, Opera 的滚动条 */
+        .pagination-container::-webkit-scrollbar {
+            display: none;
+        }
+       
         /* 分页按钮样式 */
         .pagination-btn {
             min-width: 36px;
