@@ -353,14 +353,19 @@
                 tempBtn.innerText = '10'; // 用两位数测试宽度
                 tempBtn.style.visibility = 'hidden';
                 tempBtn.style.position = 'absolute';
+                tempBtn.style.top = '0';
+                tempBtn.style.pointerEvents = 'none';
                 paginationContainer.appendChild(tempBtn);
                 
                 // 获取计算后的样式
                 const btnStyle = window.getComputedStyle(tempBtn);
                 const btnWidth = tempBtn.offsetWidth + parseFloat(btnStyle.marginLeft) + parseFloat(btnStyle.marginRight);
-                // 注意：gap 是父容器的属性，不能直接加在子元素上，但 flex gap 会在元素间产生空间。
-                // 更准确的方法是看容器可用宽度。
-                const containerWidth = paginationContainer.clientWidth;
+                
+                // 兜底：首次渲染容器还没布局完成时，取父卡片宽度或屏幕宽度
+                const containerWidth = paginationContainer.clientWidth 
+                    || paginationContainer.parentElement.clientWidth 
+                    || window.innerWidth - 64;
+                
                 // 估算每个页码项占用的平均宽度（按钮宽 + 间隙）。间隙由 CSS gap: 0.5rem (8px) 定义。
                 const gapSize = 8; 
                 const itemFullWidth = btnWidth + gapSize;
@@ -372,8 +377,7 @@
                 const arrowSpace = itemFullWidth * 2;
                 const availableSpaceForPages = containerWidth - arrowSpace;
                 
-                // 最大可显示页码数 (至少显示 3 个：首、中、尾，或者更多)
-                // 如果空间极小，至少也要能放下 1 个中间页码
+                // 最大可显示页码数 (至少显示 1 个中间页码)
                 let maxVisiblePages = Math.floor(availableSpaceForPages / itemFullWidth);
                 if (maxVisiblePages < 1) maxVisiblePages = 1;
                 if (maxVisiblePages > totalPages) maxVisiblePages = totalPages;
@@ -429,56 +433,14 @@
                 // 始终包含第一页和最后一页
                 let items = [1];
                 
-                // 计算中间部分需要显示多少个页码
-                // maxVisible 是总共能显示的页码数（不含首尾和省略号？不，这里是含首尾的总容量估算）
-                // 为了简化，我们定义 maxVisible 为“除了首尾之外，中间还能塞几个数字”
-                // 但上面的计算是总容量。让我们重新定义：
-                // totalSlots = maxVisible. 
-                // 固定占用: Page 1, Page Last, Prev Arrow, Next Arrow.
-                // 实际上，我们在 renderPage 里已经单独加了 Prev/Next。
-                // 所以 pageItems 只负责数字和省略号。
-                // 假设 maxVisible 是指 pageItems 数组的最大长度。
-                
-                // 修正逻辑：
-                // 我们希望 pageItems 的长度不超过 maxVisible。
-                // 必须包含: 1, total.
-                // 可选包含: current, current-1, current+1...
-                
-                let leftBound = Math.max(2, current - 1);
-                let rightBound = Math.min(total - 1, current + 1);
-                
-                // 如果 maxVisible 很小（比如只能显示3个项：1, ..., 10），那中间就不显示数字，只显示省略号
-                // 如果 maxVisible 较大，则显示更多
-                
-                // 策略：
-                // 1. 如果 total <= maxVisible, 显示所有
-                if (total <= maxVisible) {
-                     return Array.from({length: total}, (_, i) => i + 1);
-                }
-                
-                // 2. 否则，动态调整左右边界
-                // 我们希望尽可能多地显示 current 附近的页码，但不超过 maxVisible - 2 (因为要留位置给 1 和 total，以及可能的省略号)
-                // 实际上，省略号也占位置。
-                // 让我们简单化：
-                // 显示 1
-                // 如果 leftBound > 2, 显示 ...
-                // 显示 leftBound 到 rightBound
-                // 如果 rightBound < total - 1, 显示 ...
-                // 显示 total
-                
-                // 动态调整 sideCount
-                // 可用槽位 = maxVisible - 2 (首尾) - 2 (两个省略号，如果存在)
-                // 这太复杂了。不如直接限制 sideCount。
-                
-                // 简单有效的自适应策略：
-                // 根据 maxVisible 决定 sideCount (当前页左右各几个)
+                // 策略：根据 maxVisible 决定 sideCount (当前页左右各几个)
                 let sideCount = 1;
                 if (maxVisible >= 7) sideCount = 2;
                 if (maxVisible >= 9) sideCount = 3;
                 if (maxVisible >= 11) sideCount = 4;
                 
-                leftBound = Math.max(2, current - sideCount);
-                rightBound = Math.min(total - 1, current + sideCount);
+                let leftBound = Math.max(2, current - sideCount);
+                let rightBound = Math.min(total - 1, current + sideCount);
                 
                 // 修正边界，防止省略号出现得太突兀
                 if (current <= sideCount + 1) {
@@ -488,21 +450,25 @@
                     leftBound = Math.max(2, total - 1 - sideCount * 2);
                 }
 
+                // 如果起始页大于2，左侧加省略号
                 if (leftBound > 2) {
                     items.push('...');
                 } else {
-                    // 如果 leftBound 是 2，则不需要省略号，直接从 2 开始循环
+                    // 起始是2就不需要省略号，直接从2开始
                     leftBound = 2;
                 }
-                
+
+                // 添加中间的连续页码
                 for (let i = leftBound; i <= rightBound; i++) {
                     items.push(i);
                 }
-                
+
+                // 如果结束页小于倒数第二页，右侧加省略号
                 if (rightBound < total - 1) {
                     items.push('...');
                 }
-                
+
+                // 添加最后一页
                 items.push(total);
                 
                 return items;
