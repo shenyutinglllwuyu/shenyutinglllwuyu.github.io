@@ -117,7 +117,12 @@
         .md-rendered h2 { font-size: 1.5em; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3em; }
         .md-rendered h3 { font-size: 1.25em; }
         .md-rendered p { margin: 0.8em 0; }
-        .md-rendered ul, .md-rendered ol { padding-left: 1.8em; margin: 0.6em 0; }
+        .md-rendered ul { padding-left: 1.8em; margin: 0.6em 0; list-style-type: disc; }
+        .md-rendered ol { padding-left: 1.8em; margin: 0.6em 0; list-style-type: decimal; }
+        .md-rendered ul ul { list-style-type: circle; }            /* 二级无序：空心圆 */
+        .md-rendered ul ul ul { list-style-type: square; }         /* 三级无序：方块 */
+        .md-rendered ol ol { list-style-type: lower-alpha; }       /* 二级有序：a. b. */
+        .md-rendered ol ol ol { list-style-type: lower-roman; }    /* 三级有序：i. ii. */
         .md-rendered li { margin: 0.3em 0; }
         .md-rendered a { color: #3b82f6; text-decoration: underline; }
         .md-rendered blockquote {
