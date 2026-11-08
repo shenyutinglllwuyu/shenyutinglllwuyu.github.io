@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -10,13 +9,17 @@
     <link rel="shortcut icon" href="/file/web/favicon.ico" type="image/icon">
     <link rel="apple-touch-icon" href="/file/web/favicon.ico">
 
+    <!-- 依赖库 -->
     <script src="/file/3.4.17.txt"></script>
     <link rel="stylesheet" href="/file/fontawesome-free-6.4.0-web/css/all.min.css">
+    
     <style>
         body {
             background-color: #121212;
             color: white;
             font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         .netease-player {
             width: 100%;
@@ -35,6 +38,9 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow-x: visible; 
+            overflow-y: hidden;
         }
         /* 卡片加载前的占位背景 */
         .card-skeleton {
@@ -59,42 +65,34 @@
         .card-content.loaded {
             opacity: 1;
         }
-        .extra-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 60px;
-            color: #a1a1a1;
-            font-size: 0.9rem;
-            border-radius: 0.75rem;
-            margin-top: 1.5rem;
-        }
-      
         /* 分页容器样式 */
         .pagination-container {
             display: flex;
             flex-wrap: nowrap;
-            justify-content: center;
+            justify-content: flex-start; 
             align-items: center;
             gap: 0.5rem;
             margin-top: 1.5rem;
             min-height: 40px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 8px;
             overflow-x: auto;
-            padding-bottom: 4px;
-            
-            /* 隐藏滚动条，保持界面整洁 */
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
-        
-        /* 隐藏 Chrome, Safari, Opera 的滚动条 */
         .pagination-container::-webkit-scrollbar {
             display: none;
         }
-       
-        /* 分页按钮样式 */
+        .pagination-container > :first-child {
+            margin-left: auto;
+        }
+        .pagination-container > :last-child {
+            margin-right: auto;
+        }
+        /* 分页按钮样式 - 固定尺寸以确保计算准确 */
         .pagination-btn {
             min-width: 36px;
             height: 36px;
@@ -108,8 +106,9 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.2s ease;
-            padding: 0 8px; /* 增加内边距以容纳多位数 */
+            padding: 0 8px;
             user-select: none;
+            box-sizing: border-box;
         }
         .pagination-btn:hover {
             background: rgba(255, 255, 255, 0.1);
@@ -135,6 +134,7 @@
             color: #888;
             font-size: 0.9rem;
             padding: 0 4px;
+            box-sizing: border-box;
         }
         /* 播放器占位符 */
         .player-placeholder {
@@ -146,12 +146,14 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            margin-bottom: 1rem;
         }
         
         /* 移动端微调 */
         @media (max-width: 640px) {
             .big-card {
                 padding: 1rem;
+                border-radius: 1rem;
             }
             .pagination-btn, .pagination-ellipsis {
                 min-width: 32px;
@@ -187,14 +189,13 @@
 
     <script>
         const ITEMS_PER_PAGE = 2;
-        let cardObserver; // 卡片级观察者
-        let playerObserver; // 播放器级观察者
-        let musicGroups = []; // 存储从 JSON 加载的数据
+        let cardObserver; 
+        let playerObserver; 
+        let musicGroups = []; 
 
-        // 1. 初始化页面并加载 JSON (使用 no-store 禁用缓存)
+        // 初始化页面并加载 JSON
         async function initPage() {
             try {
-                // 关键修改：添加 cache: 'no-store' 选项，强制每次重新获取
                 const response = await fetch('../json/music163config.json', {
                     cache: 'no-store'
                 });
@@ -203,43 +204,47 @@
                 musicGroups = await response.json();
                 
                 const container = document.getElementById('music-container');
-                container.innerHTML = ''; // 清空加载提示
+                container.innerHTML = ''; 
 
-                // 初始化观察者
                 initObservers();
 
-                // 渲染卡片骨架
-                musicGroups.forEach((group, index) => {
-                    const bigCard = document.createElement('div');
-                    bigCard.className = "big-card";
-                    bigCard.setAttribute('data-group-index', index);
-                    
-                    // 骨架屏占位
-                    const skeleton = document.createElement('div');
-                    skeleton.className = "card-skeleton";
-                    bigCard.appendChild(skeleton);
-
-                    // 内容容器（初始隐藏）
-                    const contentDiv = document.createElement('div');
-                    contentDiv.className = "card-content";
-                    contentDiv.id = `content-${index}`;
-                    bigCard.appendChild(contentDiv);
-
-                    container.appendChild(bigCard);
-                    
-                    // 开始观察卡片
-                    cardObserver.observe(bigCard);
-                });
+                if (musicGroups && musicGroups.length > 0) {
+                    musicGroups.forEach((group, index) => {
+                        createCardSkeleton(index);
+                    });
+                } else {
+                    container.innerHTML = '<div class="text-center text-gray-500">暂无音乐数据</div>';
+                }
 
             } catch (error) {
+                console.error(error);
                 document.getElementById('music-container').innerHTML = `
                     <div class="text-center text-red-400 py-20">
                         <i class="fas fa-exclamation-triangle text-3xl mb-4"></i>
-                        <p>加载失败: ${error.message}</p>
-                        <p class="text-sm text-gray-500 mt-2">请确保 config.json 文件存在且格式正确</p>
+                        加载失败: ${error.message}</p>
                     </div>
                 `;
             }
+        }
+
+        function createCardSkeleton(index) {
+            const container = document.getElementById('music-container');
+            const bigCard = document.createElement('div');
+            bigCard.className = "big-card";
+            bigCard.setAttribute('data-group-index', index);
+            
+            const skeleton = document.createElement('div');
+            skeleton.className = "card-skeleton";
+            bigCard.appendChild(skeleton);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = "card-content";
+            contentDiv.id = `content-${index}`;
+            bigCard.appendChild(contentDiv);
+
+            container.appendChild(bigCard);
+            
+            if (cardObserver) cardObserver.observe(bigCard);
         }
 
         function initObservers() {
@@ -273,10 +278,10 @@
                         const card = entry.target;
                         const groupIndex = parseInt(card.getAttribute('data-group-index'));
                         
-                        // 只有当卡片进入视口时，才执行内部初始化的重逻辑
-                        initCardContent(card, musicGroups[groupIndex], groupIndex);
+                        if (musicGroups[groupIndex]) {
+                            initCardContent(card, musicGroups[groupIndex], groupIndex);
+                        }
                         
-                        // 停止观察该卡片，避免重复初始化
                         cardObserver.unobserve(card);
                     }
                 });
@@ -287,13 +292,13 @@
             const contentDiv = document.getElementById(`content-${groupIndex}`);
             const skeleton = cardElement.querySelector('.card-skeleton');
             
-            // 1. 构建 HTML 结构
-            // 将十六进制颜色转换为渐变背景
+            if (!contentDiv) return;
+
             const headerHtml = `
-                <div class="mb-8 text-center">
+                <div class="mb-6 text-center">
                     <span class="inline-block px-6 py-2 rounded-full text-sm font-bold text-white shadow-lg" 
-                          style="background: linear-gradient(135deg, ${group.color}, ${adjustColor(group.color, 40)})">
-                        ${group.label}
+                          style="background: linear-gradient(135deg, ${group.color || '#333'}, ${adjustColor(group.color || '#333', 40)})">
+                        ${group.label || '音乐列表'}
                     </span>
                 </div>
             `;
@@ -301,190 +306,159 @@
             const gridContainerId = `grid-${groupIndex}`;
             const paginationId = `pagination-${groupIndex}`;
             
-            const gridHtml = `<div id="${gridContainerId}" class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6"></div>`;
-            // 注意：这里添加了 pagination-container 类以便 CSS 控制
+            const gridHtml = `<div id="${gridContainerId}" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"></div>`;
             const paginationHtml = `<div class="pagination-container" id="${paginationId}"></div>`;
-            const extraCardHtml = `
-            `;
 
-            contentDiv.innerHTML = headerHtml + gridHtml + paginationHtml + extraCardHtml;
+            contentDiv.innerHTML = headerHtml + gridHtml + paginationHtml;
             
-            // 显示内容，隐藏骨架
-            skeleton.style.display = 'none';
+            if (skeleton) skeleton.style.display = 'none';
             contentDiv.classList.add('loaded');
 
-            // 2. 初始化该卡片的分页逻辑
-            initGroupPagination(groupIndex, group.ids);
+            if (group.ids && group.ids.length > 0) {
+                initGroupPagination(groupIndex, group.ids);
+            }
         }
 
-        // 辅助函数：调整颜色亮度以生成渐变
+        // 辅助函数：调整颜色亮度
         function adjustColor(color, amount) {
-            return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+            if (!color || color.length !== 7) return '#333333';
+            try {
+                return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+            } catch (e) {
+                return '#333333';
+            }
         }
 
         function initGroupPagination(groupIndex, ids) {
             const totalPages = Math.ceil(ids.length / ITEMS_PER_PAGE);
+            if (totalPages <= 0) return;
+            
             let currentPage = 1;
             let resizeTimer;
 
-            const renderPage = (page) => {
+            const renderPage = (page, isResize = false) => {
                 const gridContainer = document.getElementById(`grid-${groupIndex}`);
                 const paginationContainer = document.getElementById(`pagination-${groupIndex}`);
                 
-                // 关键：清空当前网格，销毁旧的 iframe/占位符，释放资源
-                gridContainer.innerHTML = '';
-                
-                // 计算当前页数据
-                const start = (page - 1) * ITEMS_PER_PAGE;
-                const end = start + ITEMS_PER_PAGE;
-                const pageIds = ids.slice(start, end);
+                if (!gridContainer || !paginationContainer) return;
 
-                // 渲染新的占位符
-                pageIds.forEach(id => {
-                    const playerSrc = `https://music.163.com/outchain/player?type=2&id=${id}&auto=0&height=66`;
-                    const cardDiv = document.createElement('div');
-                    cardDiv.className = "bg-white/5 rounded-xl p-3 border border-white/5";
-                    cardDiv.innerHTML = `
-                        <div class="player-placeholder" data-src="${playerSrc}">
-                            <div class="text-center text-gray-500">
-                                <i class="fas fa-play-circle text-2xl mb-1"></i>
-                                <div class="text-xs">点击加载</div>
-                            </div>
-                        </div>
-                    `;
-                    gridContainer.appendChild(cardDiv);
-                });
+                try {
+                    // 仅在非resize场景下渲染播放器，避免窗口变化导致音乐重载
+                    if (!isResize) {
+                        gridContainer.innerHTML = '';
+                        const start = (page - 1) * ITEMS_PER_PAGE;
+                        const end = start + ITEMS_PER_PAGE;
+                        const pageIds = ids.slice(start, end);
 
-                // 将新占位符加入播放器观察者
-                document.querySelectorAll(`#grid-${groupIndex} .player-placeholder`).forEach(el => playerObserver.observe(el));
-
-                // --- 动态页码计算逻辑开始 ---
-                
-                // 1. 测量单个按钮的宽度（含 gap）
-                // 创建一个临时按钮来测量
-                const tempBtn = document.createElement('button');
-                tempBtn.className = 'pagination-btn';
-                tempBtn.innerText = '10'; // 用两位数测试宽度
-                tempBtn.style.visibility = 'hidden';
-                tempBtn.style.position = 'absolute';
-                tempBtn.style.top = '0';
-                tempBtn.style.pointerEvents = 'none';
-                paginationContainer.appendChild(tempBtn);
-                
-                // 获取计算后的样式
-                const btnStyle = window.getComputedStyle(tempBtn);
-                const btnWidth = tempBtn.offsetWidth + parseFloat(btnStyle.marginLeft) + parseFloat(btnStyle.marginRight);
-                
-                // 兜底：首次渲染容器还没布局完成时，取父卡片宽度或屏幕宽度
-                const containerWidth = paginationContainer.clientWidth 
-                    || paginationContainer.parentElement.clientWidth 
-                    || window.innerWidth - 64;
-                
-                // 估算每个页码项占用的平均宽度（按钮宽 + 间隙）。间隙由 CSS gap: 0.5rem (8px) 定义。
-                const gapSize = 8; 
-                const itemFullWidth = btnWidth + gapSize;
-                
-                paginationContainer.removeChild(tempBtn);
-
-                // 2. 计算当前容器能容纳多少个页码项
-                // 预留左右箭头的位置 (2个按钮)
-                const arrowSpace = itemFullWidth * 2;
-                const availableSpaceForPages = containerWidth - arrowSpace;
-                
-                // 最大可显示页码数 (至少显示 1 个中间页码)
-                let maxVisiblePages = Math.floor(availableSpaceForPages / itemFullWidth);
-                if (maxVisiblePages < 1) maxVisiblePages = 1;
-                if (maxVisiblePages > totalPages) maxVisiblePages = totalPages;
-
-                // 3. 生成页码数组
-                const pageItems = generateSmartPagination(totalPages, page, maxVisiblePages);
-
-                // 4. 渲染分页控件
-                paginationContainer.innerHTML = '';
-                
-                // 上一页
-                const prevBtn = document.createElement('button');
-                prevBtn.className = 'pagination-btn';
-                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-                prevBtn.disabled = page === 1;
-                prevBtn.onclick = () => changePage(page - 1);
-                paginationContainer.appendChild(prevBtn);
-
-                // 页码
-                pageItems.forEach(item => {
-                    if (item === '...') {
-                        const ellipsis = document.createElement('span');
-                        ellipsis.className = 'pagination-ellipsis';
-                        ellipsis.innerText = '...';
-                        paginationContainer.appendChild(ellipsis);
-                    } else {
-                        const pageBtn = document.createElement('button');
-                        pageBtn.className = `pagination-btn ${item === page ? 'active' : ''}`;
-                        pageBtn.innerText = item;
-                        pageBtn.onclick = () => changePage(item);
-                        paginationContainer.appendChild(pageBtn);
+                        pageIds.forEach(id => {
+                            const playerSrc = `https://music.163.com/outchain/player?type=2&id=${id}&auto=0&height=66`;
+                            const cardDiv = document.createElement('div');
+                            cardDiv.className = "bg-white/5 rounded-xl p-3 border border-white/5";
+                            cardDiv.innerHTML = `
+                                <div class="player-placeholder" data-src="${playerSrc}">
+                                    <div class="text-center text-gray-500">
+                                        <i class="fas fa-play-circle text-2xl mb-1"></i>
+                                        <div class="text-xs">点击加载</div>
+                                    </div>
+                                </div>
+                            `;
+                            gridContainer.appendChild(cardDiv);
+                        });
+                        
+                        // 注册播放器懒加载
+                        const placeholders = gridContainer.querySelectorAll('.player-placeholder');
+                        placeholders.forEach(el => {
+                            if (playerObserver) playerObserver.observe(el);
+                        });
                     }
-                });
 
-                // 下一页
-                const nextBtn = document.createElement('button');
-                nextBtn.className = 'pagination-btn';
-                nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-                nextBtn.disabled = page === totalPages;
-                nextBtn.onclick = () => changePage(page + 1);
-                paginationContainer.appendChild(nextBtn);
-                
-                // --- 动态页码计算逻辑结束 ---
+                    // 分页控件渲染逻辑（所有场景均执行，仅更新页码按钮布局）
+                    paginationContainer.innerHTML = '';
+                    
+                    if (totalPages <= 1) return;
+
+                    const isMobile = window.innerWidth < 640;
+                    const itemWidth = (isMobile ? 40 : 44) + 10;
+                    const safeWidth = paginationContainer.clientWidth || (window.innerWidth - (isMobile ? 32 : 64)); 
+                    const availableForPages = safeWidth - (itemWidth * 2);
+                    
+                    let maxVisible = Math.floor(availableForPages / itemWidth);
+                    maxVisible = Math.max(3, Math.min(maxVisible, totalPages));
+
+                    const pageItems = generateSmartPagination(totalPages, page, maxVisible);
+
+                    // 上一页按钮
+                    const prevBtn = document.createElement('button');
+                    prevBtn.className = 'pagination-btn';
+                    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                    prevBtn.disabled = page === 1;
+                    prevBtn.onclick = () => changePage(page - 1);
+                    paginationContainer.appendChild(prevBtn);
+
+                    // 页码按钮
+                    pageItems.forEach(item => {
+                        if (item === '...') {
+                            const ellipsis = document.createElement('span');
+                            ellipsis.className = 'pagination-ellipsis';
+                            ellipsis.innerText = '...';
+                            paginationContainer.appendChild(ellipsis);
+                        } else {
+                            const pageBtn = document.createElement('button');
+                            pageBtn.className = `pagination-btn ${item === page ? 'active' : ''}`;
+                            pageBtn.innerText = item;
+                            pageBtn.onclick = () => changePage(item);
+                            paginationContainer.appendChild(pageBtn);
+                        }
+                    });
+
+                    // 下一页按钮
+                    const nextBtn = document.createElement('button');
+                    nextBtn.className = 'pagination-btn';
+                    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                    nextBtn.disabled = page === totalPages;
+                    nextBtn.onclick = () => changePage(page + 1);
+                    paginationContainer.appendChild(nextBtn);
+
+                } catch (e) {
+                    console.error("分页渲染错误:", e);
+                    // 降级处理
+                    paginationContainer.innerHTML = `
+                        <button class="pagination-btn" onclick="window.changePageGlobal_${groupIndex}(${page-1})" ${page===1?'disabled':''}><i class="fas fa-chevron-left"></i></button>
+                        <span class="text-xs text-gray-500">${page}/${totalPages}</span>
+                        <button class="pagination-btn" onclick="window.changePageGlobal_${groupIndex}(${page+1})" ${page===totalPages?'disabled':''}><i class="fas fa-chevron-right"></i></button>
+                    `;
+                }
             };
 
-            // 智能分页生成算法
+            // 智能分页算法
             function generateSmartPagination(total, current, maxVisible) {
-                if (total <= 5) {
-                    // 页数很少，全部显示
+                if (total <= maxVisible) {
                     return Array.from({length: total}, (_, i) => i + 1);
                 }
 
-                // 始终包含第一页和最后一页
-                let items = [1];
-                
-                // 策略：根据 maxVisible 决定 sideCount (当前页左右各几个)
-                let sideCount = 1;
-                if (maxVisible >= 7) sideCount = 2;
-                if (maxVisible >= 9) sideCount = 3;
-                if (maxVisible >= 11) sideCount = 4;
-                
+                const items = [1];
+                let sideCount = Math.floor((maxVisible - 2) / 2);
+                if (sideCount < 1) sideCount = 1;
+
                 let leftBound = Math.max(2, current - sideCount);
                 let rightBound = Math.min(total - 1, current + sideCount);
-                
-                // 修正边界，防止省略号出现得太突兀
+
                 if (current <= sideCount + 1) {
-                    rightBound = Math.min(total - 1, 2 + sideCount * 2);
+                    rightBound = Math.min(total - 1, 1 + (sideCount * 2));
                 }
                 if (current >= total - sideCount) {
-                    leftBound = Math.max(2, total - 1 - sideCount * 2);
+                    leftBound = Math.max(2, total - (sideCount * 2));
                 }
 
-                // 如果起始页大于2，左侧加省略号
-                if (leftBound > 2) {
-                    items.push('...');
-                } else {
-                    // 起始是2就不需要省略号，直接从2开始
-                    leftBound = 2;
-                }
-
-                // 添加中间的连续页码
+                if (leftBound > 2) items.push('...');
+                
                 for (let i = leftBound; i <= rightBound; i++) {
                     items.push(i);
                 }
 
-                // 如果结束页小于倒数第二页，右侧加省略号
-                if (rightBound < total - 1) {
-                    items.push('...');
-                }
-
-                // 添加最后一页
-                items.push(total);
+                if (rightBound < total - 1) items.push('...');
                 
+                items.push(total);
                 return items;
             }
 
@@ -492,20 +466,23 @@
                 if (newPage < 1 || newPage > totalPages) return;
                 currentPage = newPage;
                 renderPage(currentPage);
+                const card = document.querySelector(`[data-group-index="${groupIndex}"]`);
+                if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
             };
 
-            // 初始渲染第一页
+            window[`changePageGlobal_${groupIndex}`] = (p) => changePage(p);
+
+            // 初始渲染
             renderPage(currentPage);
 
-            // 监听窗口大小变化，重新计算页码布局
+            // 监听窗口大小变化
             const handleResize = () => {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(() => {
-                    // 只重新渲染当前页，保持状态
-                    renderPage(currentPage);
-                }, 200); // 200ms 防抖
+                    // 传入isResize=true，仅重排页码，不重载音乐
+                    renderPage(currentPage, true);
+                }, 200);
             };
-            
             window.addEventListener('resize', handleResize);
         }
 
