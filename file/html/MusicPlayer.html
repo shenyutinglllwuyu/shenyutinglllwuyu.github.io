@@ -15,6 +15,18 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/file/fontawesome-free-6.4.0-web/css/all.min.css">
     <style>
+        /* 修复移动端小窗模式：内容可滚动、卡片不左右位移 */
+        html, body {
+            overflow-x: hidden;
+            overscroll-behavior-x: none;
+            touch-action: pan-y pinch-zoom;
+        }
+        @media (max-width: 767px) {
+            #player-panel {
+                min-height: 640px;
+            }
+        }
+
         /* 自定义滚动条 */
         ::-webkit-scrollbar {
             width: 6px;
@@ -84,7 +96,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white h-screen w-screen overflow-hidden relative font-sans selection:bg-pink-500 selection:text-white">
+<body class="bg-gray-900 text-white h-screen w-full overflow-hidden relative font-sans selection:bg-pink-500 selection:text-white">
 
     <!-- 动态背景层 - 增加初始默认渐变兜底避免空白报错 -->
     <div id="bg-layer" class="absolute inset-0 z-0 bg-cover bg-center transition-all duration-1000 ease-in-out" 
@@ -92,10 +104,10 @@
     </div>
 
     <!-- 主容器 -->
-    <div class="relative z-10 h-full flex flex-col md:flex-row p-4 md:p-8 gap-6 max-w-7xl mx-auto">
+    <div class="relative z-10 h-full flex flex-col md:flex-row p-4 md:p-8 gap-6 max-w-7xl mx-auto overflow-y-auto overflow-x-hidden">
         
         <!-- 左侧：播放器核心区域 -->
-        <div class="flex-1 glass-panel rounded-3xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+        <div id="player-panel" class="flex-1 glass-panel rounded-3xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden">
             <div class="absolute top-4 left-0 right-0 flex justify-center z-20 pointer-events-none">
                 <!-- 使用 pointer-events-auto 恢复按钮点击 -->
                 <a href="/index.html" id="home-btn" class="pointer-events-auto group flex items-center justify-center px-3 py-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white transition transform hover:scale-105 shadow-lg border border-white/10" title="返回主页">
